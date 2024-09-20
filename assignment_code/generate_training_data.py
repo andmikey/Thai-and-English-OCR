@@ -22,7 +22,6 @@ class TrainingDataPoint:
 
 
 class TrainingDataSet:
-
     def __init__(self):
         self.data_points = defaultdict(list)
 
