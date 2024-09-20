@@ -11,7 +11,7 @@ from model import BasicNetwork
 @click.command()
 @click.option("--data", type=click.Path(exists=True, path_type=Path))
 @click.option("--batches", type=int, default=1)
-@click.option("--epochs", type=int)
+@click.option("--epochs", type=int, default=100)
 @click.option("--save-dir", type=click.Path(exists=True, path_type=Path))
 def main(
     data,
@@ -47,12 +47,13 @@ def main(
             optimizer.step()
 
     # Evaluate performance on training and validation sets
-    # TODO better evaluation here
     pred_classes_train = model(train.dataset.x)
-    train_loss = criterion(pred_classes_train, train.dataset.y)
+    train_eval = utils.Evaluator(pred_classes_train, train.dataset.y)
 
     pred_classes_val = model(validate.dataset.x)
-    val_loss = criterion(pred_classes_val, validate.dataset.y)
+    val_eval = utils.Evaluator(pred_classes_val, validate.dataset.y)
+
+    print(f"Train evaluation: {train_eval}\nValidation evaluation: {val_eval}")
 
     torch.save(model.state_dict(), save_dir / "model.pth")
 
