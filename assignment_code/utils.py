@@ -1,20 +1,44 @@
-from model import ImageDataset
+from pathlib import Path
+from typing import List
+
+import pandas as pd
 from torch.utils import DataLoader
+from torch.utils.data import Dataset
 from torcheval.metrics import functional as torch_eval
+from torchvision.io import read_image
+
+
+class ImageDataset(Dataset):
+    def __init__(self, data_files: List[Path]):
+        self.data = pd.concat(
+            [
+                pd.read_csv(
+                    data_file,
+                    header=None,
+                    names=["language", "dpi", "style", "label", "path"],
+                )
+                for data_file in data_files
+            ]
+        )
+
+    def __len__(self):
+        self.data.shape[0]
+
+    def __getitem__(self, idx: int):
+        image_path = self.data[idx]["class"]
+        image = read_image(image_path)
+        label = self.data[idx]["label"]
+        return image, label
 
 
 class Dataset:
-    def __init__(self, path, batches):
-        self.dataset = ImageDataset(path)
+    def __init__(self, paths, batches):
+        self.dataset = ImageDataset(paths)
         self.loader = DataLoader(self.dataset, batch_size=batches)
 
 
-def load_datasets(dataset_path, batches):
-    training_dataset = Dataset(dataset_path / "training_set.txt", batches)
-    testing_dataset = Dataset(dataset_path / "testing_set.txt", batches)
-    validation_dataset = Dataset(dataset_path / "validation_set.txt", batches)
-
-    return training_dataset, testing_dataset, validation_dataset
+def load_datasets(dataset_paths: List[Path], batches):
+    return Dataset(dataset_paths, batches)
 
 
 class Evaluator:

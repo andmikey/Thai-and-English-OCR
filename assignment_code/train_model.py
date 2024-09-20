@@ -9,19 +9,34 @@ from model import BasicNetwork
 
 
 @click.command()
-@click.option("--data", type=click.Path(exists=True, path_type=Path))
+@click.option(
+    "--train-data",
+    type=click.Path(exists=True, path_type=Path),
+    multiple=True,
+    required=True,
+)
+@click.option(
+    "--validation-data",
+    type=click.Path(exists=True, path_type=Path),
+    multiple=True,
+    required=False,
+)
 @click.option("--batches", type=int, default=1)
 @click.option("--epochs", type=int, default=100)
 @click.option("--save-dir", type=click.Path(exists=True, path_type=Path))
 def main(
-    data,
+    train_data,
+    validation_data,
     batches,
     epochs,
     save_dir,
 ):
     # Code here is based on this PyTorch tutorial: https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
     # Load the data
-    train, _, validate = utils.load_datasets(data, batches)
+    train = utils.load_datasets(train_data, batches)
+    if validation_data:
+        validate = utils.load_datasets(validation_data, batches)
+
     # Set up the model
     model = BasicNetwork()
     # Define loss function and optimizer
@@ -49,11 +64,13 @@ def main(
     # Evaluate performance on training and validation sets
     pred_classes_train = model(train.dataset.x)
     train_eval = utils.Evaluator(pred_classes_train, train.dataset.y)
+    print(f"Train evaluation: {train_eval}")
 
-    pred_classes_val = model(validate.dataset.x)
-    val_eval = utils.Evaluator(pred_classes_val, validate.dataset.y)
+    if validation_data:
+        pred_classes_val = model(validate.dataset.x)
+        val_eval = utils.Evaluator(pred_classes_val, validate.dataset.y)
 
-    print(f"Train evaluation: {train_eval}\nValidation evaluation: {val_eval}")
+    print(f"Validation evaluation: {val_eval}")
 
     torch.save(model.state_dict(), save_dir / "model.pth")
 
