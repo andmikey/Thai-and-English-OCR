@@ -42,7 +42,7 @@ Examine the ThaiOCR's test dataset. It's quite different. What does the differen
 
 ## Guideline PDF
 Run through Google Translate:
-
+```
 1
 Documents are 4 types:
 1. .Newpaper
@@ -73,3 +73,4 @@ TXT image type
 H nb_001z1.txt is the image file nb_001sg.bmp in zone H 1
 
 H nb_001z2.txt is the image file nb_001sg.bmp in zone H 2
+```
