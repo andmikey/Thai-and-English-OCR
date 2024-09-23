@@ -9,6 +9,7 @@ dependencies:
   - torchaudio
   - pytorch-cuda=12.1
   - pip
+  - pandas
   - pip:
     - torcheval
     - click
