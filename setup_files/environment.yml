@@ -1,0 +1,16 @@
+name: assignment_1
+channels:
+  - pytorch
+  - nvidia
+dependencies:
+  - python=3.12.3
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.1
+  - pip
+  - pandas
+  - pip:
+    - torcheval
+    - click
+    - matplotlib

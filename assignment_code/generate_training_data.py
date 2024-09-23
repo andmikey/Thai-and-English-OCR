@@ -22,7 +22,6 @@ class TrainingDataPoint:
 
 
 class TrainingDataSet:
-
     def __init__(self):
         self.data_points = defaultdict(list)
 
@@ -92,10 +91,10 @@ def split_dataset(
 @click.option(
     "-i",
     "--input_path",
-    type=click.Path(exists=True),
+    type=click.Path(exists=True, path_type=Path),
     default=Path("/scratch/lt2326-2926-h24/ThaiOCR/ThaiOCR-TrainigSet"),
 )
-@click.option("-o", "--output_path", type=click.Path(exists=True))
+@click.option("-o", "--output_path", type=click.Path(exists=True, path_type=Path))
 @click.option("-r", "--random_seed", type=int, default=42, required=False)
 def main(
     language,
@@ -138,7 +137,7 @@ def main(
                     images = [
                         TrainingDataPoint(lang, dpi_val, style_val, f, char_name)
                         for f in (character_dir / dpi_val / style_val).iterdir()
-                        if f.is_file()
+                        if f.is_file() and f.suffix == ".bmp"
                     ]
 
                     train, test, val = split_dataset(
@@ -152,7 +151,6 @@ def main(
                     validation_set.add_points(key, val)
 
     # Write out the train/test/validation sets to the given output path
-    output_path = Path(output_path)
     print(
         f"Generated data points:\n Train: {training_set.count_points()}\n",
         f"Test:  {testing_set.count_points()}\n",
