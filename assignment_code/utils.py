@@ -9,6 +9,11 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision.transforms import Resize
 from torchvision.transforms.functional import pil_to_tensor
 
+# Hardcode based on contents of reference file
+# This means the model will output a 286-length tensor for predictions
+# Where there is not a coresponding class, the entry for that class will just be zero
+NUM_CLASSES = 286
+
 
 class ImageDataset(Dataset):
     def __init__(self, data_files: List[Path]):

@@ -8,11 +8,6 @@ import torch.optim as optim
 import utils
 from model import BasicNetwork
 
-# Hardcode based on contents of reference file
-# This means the model will output a 286-length tensor for predictions
-# Where there is not a coresponding class, the entry for that class will just be zero
-NUM_CLASSES = 286
-
 
 @click.command()
 @click.option(
@@ -48,7 +43,7 @@ def main(
         validate = utils.load_datasets(validation_data, batches)
 
     # Set up the model
-    model = BasicNetwork(NUM_CLASSES, 64)
+    model = BasicNetwork(utils.NUM_CLASSES, 64)
     # Define loss function and optimizer
     # Optimizer takes class index
     criterion = nn.CrossEntropyLoss()
@@ -75,14 +70,15 @@ def main(
     # Evaluate performance on training and validation sets
     # pred_classes_train = model(train.dataset.x)
     # train_eval = utils.Evaluator(pred_classes_train, train.dataset.y)
-    # print(f"Train evaluation: {train_eval}")
+    # logging.info(f"Train evaluation: {train_eval}")
 
     # if validation_data:
     #     pred_classes_val = model(validate.dataset.x)
     #     val_eval = utils.Evaluator(pred_classes_val, validate.dataset.y)
 
-    # print(f"Validation evaluation: {val_eval}")
+    # logging.info(f"Validation evaluation: {val_eval}")
 
+    # logging.info(f"Saving model to {save_dir / 'model.pth'}")
     # torch.save(model.state_dict(), save_dir / "model.pth")
 
 
