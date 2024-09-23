@@ -35,8 +35,11 @@ def main(
     # Set up logging
     logging.basicConfig(
         filename=save_dir / "training.log",
-        filemode="w+",
+        filemode="a",
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
     )
+    logger = logging.getLogger(__name__)
 
     # Load the data
     train = utils.load_datasets(train_data, batches)
@@ -72,15 +75,15 @@ def main(
         train_eval = utils.Evaluator(model, train, device)
         train_eval.run_on_input()
         train_eval.calculate_metrics()
-        logging.info("Training evaluation: {train_eval}")
+        logger.info(f"Training evaluation: {train_eval}")
 
         # Evaluate on validation
         val_eval = utils.Evaluator(model, validate, device)
         val_eval.run_on_input()
         val_eval.calculate_metrics()
-        logging.info("Validation evaluation: {val_eval}")
+        logger.info(f"Validation evaluation: {val_eval}")
 
-    logging.info(f"Saving model to {save_dir / 'model.pth'}")
+    logger.info(f"Saving model to {save_dir / 'model.pth'}")
     torch.save(model.state_dict(), save_dir / "model.pth")
 
 

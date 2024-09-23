@@ -84,7 +84,8 @@ class Evaluator:
         self.accuracy = torch_eval.multiclass_accuracy(self.predicted, self.actual)
 
     def __str__(self):
-        output_str = f"""Metric | Value 
+        output_str = f"""
+Metric | Value 
 ---|---
 Precision | {self.precision:.3%}
 Recall | {self.recall:.3%}
