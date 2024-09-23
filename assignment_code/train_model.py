@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 import click
@@ -6,6 +7,11 @@ import torch.nn as nn
 import torch.optim as optim
 import utils
 from model import BasicNetwork
+
+# Hardcode based on contents of reference file
+# This means the model will output a 286-length tensor for predictions
+# Where there is not a coresponding class, the entry for that class will just be zero
+NUM_CLASSES = 286
 
 
 @click.command()
@@ -31,15 +37,20 @@ def main(
     epochs,
     save_dir,
 ):
-    # Code here is based on this PyTorch tutorial: https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
+    # Set up logging
+    logging.basicConfig(
+        filename=save_dir / "training.log", filemode="a", format="{asctime} - {message}"
+    )
+
     # Load the data
     train = utils.load_datasets(train_data, batches)
     if validation_data:
         validate = utils.load_datasets(validation_data, batches)
 
     # Set up the model
-    model = BasicNetwork()
+    model = BasicNetwork(NUM_CLASSES, 64)
     # Define loss function and optimizer
+    # Optimizer takes class index
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.1)
 
@@ -62,17 +73,17 @@ def main(
             optimizer.step()
 
     # Evaluate performance on training and validation sets
-    pred_classes_train = model(train.dataset.x)
-    train_eval = utils.Evaluator(pred_classes_train, train.dataset.y)
-    print(f"Train evaluation: {train_eval}")
+    # pred_classes_train = model(train.dataset.x)
+    # train_eval = utils.Evaluator(pred_classes_train, train.dataset.y)
+    # print(f"Train evaluation: {train_eval}")
 
-    if validation_data:
-        pred_classes_val = model(validate.dataset.x)
-        val_eval = utils.Evaluator(pred_classes_val, validate.dataset.y)
+    # if validation_data:
+    #     pred_classes_val = model(validate.dataset.x)
+    #     val_eval = utils.Evaluator(pred_classes_val, validate.dataset.y)
 
-    print(f"Validation evaluation: {val_eval}")
+    # print(f"Validation evaluation: {val_eval}")
 
-    torch.save(model.state_dict(), save_dir / "model.pth")
+    # torch.save(model.state_dict(), save_dir / "model.pth")
 
 
 if __name__ == "__main__":

@@ -137,7 +137,7 @@ def main(
                     images = [
                         TrainingDataPoint(lang, dpi_val, style_val, f, char_name)
                         for f in (character_dir / dpi_val / style_val).iterdir()
-                        if f.is_file()
+                        if f.is_file() and f.suffix == ".bmp"
                     ]
 
                     train, test, val = split_dataset(
