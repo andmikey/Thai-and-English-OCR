@@ -15,10 +15,10 @@ python3 ../../assignment_code/train_model.py \
     --train-data $experiment_path/data/training_set.txt \
     --validation-data $experiment_path/data/validation_set.txt \
     --save-dir $experiment_path/outputs/ \
-    --batches 1 --epochs 1
+    --batches 10 --epochs 2
 
 # Evaluate the model
 python3 ../../assignment_code/evaluate_model.py \
-    --data $experiment_path/data/testing.txt \
+    --test-data $experiment_path/data/testing_set.txt \
     --model-path $experiment_path/outputs/ \
     --save-dir $experiment_path/outputs/
