@@ -34,7 +34,8 @@ def main(
 ):
     # Set up logging
     logging.basicConfig(
-        filename=save_dir / "training.log", filemode="a", format="{asctime} - {message}"
+        filename=save_dir / "training.log",
+        filemode="w+",
     )
 
     # Load the data
@@ -57,8 +58,6 @@ def main(
     model.to(device)
 
     for epoch in range(epochs):
-        loss = 0.0
-
         for idx, data in enumerate(train.loader, 0):
             inputs, labels = data[0].to(device), data[1].to(device)
             optimizer.zero_grad()
@@ -68,18 +67,21 @@ def main(
             optimizer.step()
 
     # Evaluate performance on training and validation sets
-    # pred_classes_train = model(train.dataset.x)
-    # train_eval = utils.Evaluator(pred_classes_train, train.dataset.y)
-    # logging.info(f"Train evaluation: {train_eval}")
+    with torch.no_grad():
+        # Evaluate on train
+        train_eval = utils.Evaluator(model, train, device)
+        train_eval.run_on_input()
+        train_eval.calculate_metrics()
+        logging.info("Training evaluation: {train_eval}")
 
-    # if validation_data:
-    #     pred_classes_val = model(validate.dataset.x)
-    #     val_eval = utils.Evaluator(pred_classes_val, validate.dataset.y)
+        # Evaluate on validation
+        val_eval = utils.Evaluator(model, validate, device)
+        val_eval.run_on_input()
+        val_eval.calculate_metrics()
+        logging.info("Validation evaluation: {val_eval}")
 
-    # logging.info(f"Validation evaluation: {val_eval}")
-
-    # logging.info(f"Saving model to {save_dir / 'model.pth'}")
-    # torch.save(model.state_dict(), save_dir / "model.pth")
+    logging.info(f"Saving model to {save_dir / 'model.pth'}")
+    torch.save(model.state_dict(), save_dir / "model.pth")
 
 
 if __name__ == "__main__":

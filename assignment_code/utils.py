@@ -1,11 +1,12 @@
 from pathlib import Path
 from typing import List
 
+import numpy as np
 import pandas as pd
+import torch
 from PIL import Image
 from torch.utils.data import DataLoader, Dataset
-
-# from torcheval.metrics import functional as torch_eval
+from torcheval.metrics import functional as torch_eval
 from torchvision.transforms import Resize
 from torchvision.transforms.functional import pil_to_tensor
 
@@ -54,26 +55,40 @@ def load_datasets(dataset_paths: List[Path], batches):
     return Dataset(dataset_paths, batches)
 
 
-# class Evaluator:
-#     def __init__(self, predicted, actual):
-#         self.predicted = predicted
-#         self.actual = actual
+class Evaluator:
+    def __init__(self, model, input, device):
+        self.model = model
+        self.input = input
+        self.device = device
 
-#     def calculate_metrics(self):
-#         self.precision = torch_eval.multiclass_precision(self.predicted, self.actual)
-#         self.recall = torch_eval.multiclass_recall(self.predicted, self.actual)
-#         self.f1 = torch_eval.multiclass_f1_score(self.predicted, self.actual)
-#         self.accuracy = torch_eval.multiclass_accuracy(self.predicted, self.actual)
-#         self.auc = torch_eval.multiclass_auroc(self.predicted, self.actual)
-#         self.roc = torch_eval.multiclass_precision_recall_curve(
-#             self.predicted, self.actual
-#         )
+    def run_on_input(self):
+        # Keep a list-of-lists then flatten it later
+        # Necessary because
+        overall_true_labels = []
+        overall_predicted_labels = []
 
-#     def __str__(self):
-#         output_str = f"""Precision: {self.precision}
-# Recall: {self.recall}
-# F1: {self.f1}
-# Accuracy: {self.accuracy}
-# AUC: {self.auc}"""
+        for idx, data in enumerate(self.input.loader, 0):
+            inputs, labels = data[0].to(self.device), data[1].to(self.device)
+            predicted = self.model(inputs)
+            overall_true_labels.append(labels)
+            overall_predicted_labels.append(predicted)
 
-#         return output_str
+        self.actual = torch.cat(overall_true_labels)
+        self.predicted = torch.cat(overall_predicted_labels)
+        self.calculate_metrics()
+
+    def calculate_metrics(self):
+        self.precision = torch_eval.multiclass_precision(self.predicted, self.actual)
+        self.recall = torch_eval.multiclass_recall(self.predicted, self.actual)
+        self.f1 = torch_eval.multiclass_f1_score(self.predicted, self.actual)
+        self.accuracy = torch_eval.multiclass_accuracy(self.predicted, self.actual)
+
+    def __str__(self):
+        output_str = f"""Metric | Value 
+---|---
+Precision | {self.precision:.3%}
+Recall | {self.recall:.3%}
+F1 | {self.f1:.3%}
+Accuracy | {self.accuracy:.3%}"""
+
+        return output_str
