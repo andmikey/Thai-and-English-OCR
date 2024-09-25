@@ -4,6 +4,7 @@
 ### Create the conda environment 
 `conda env create -f setup_files/environment.yml --prefix /scratch/gusandmich/conda_envs`
 `conda activate assignment_1`
+I've put mine in /scratch because it's too slow on the NFS: conda activate /scratch/gusandmich/assignment_1_scratch/ 
 
 ## Comments on challenges / decisions
 ### Saving the training data
@@ -27,3 +28,5 @@ Went with LeNet 5.
 ## Experiment results
 
 ## Bonus section
+### Formatting
+Last letter (b/g) indicates if b/w or grayscale. Dims are for grayscale only. Seems to work well enough for the bw too, though, from testing. 
