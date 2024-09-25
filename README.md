@@ -6,6 +6,8 @@
 `conda activate assignment_1`
 I've put mine in /scratch because it's too slow on the NFS: conda activate /scratch/gusandmich/assignment_1_scratch/ 
 
+Set NUM_BATCHES and NUM_EPOCHS and export them into your env 
+
 ## Comments on challenges / decisions
 ### Saving the training data
 Wrote paths to a file. Means you don't copy the data anywhere, fast to retrieve. 
