@@ -3,6 +3,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import click
+import cv2 as cv
+import numpy as np
+from PIL import Image
 
 
 @dataclass
@@ -16,9 +19,23 @@ class Segment:
     y_end: int
     segment_type: str
     type: str
+    characters = []
 
     def get_image_of_segment(self):
-        pass
+        img = Image.open(self.path).crop(
+            (self.x_start, self.y_start, self.x_end, self.y_end)
+        )
+        self.img = img
+
+    def get_characters_of_segment(self):
+        arr = np.array(self.img)
+        # Use OpenCV to get bounding box rectangles for letters
+        contours, _ = cv.findContours(arr, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+        for cnt in contours:
+            # Maybe want to do some filtering here to make sure we get large enough boxes
+            x, y, w, h = cv.boundingRect(cnt)
+            letter_crop = self.img.crop((x, y, x + w, y + h))
+            self.characters += letter_crop
 
 
 def read_segment_list(path: Path, type, img_dir):
@@ -56,10 +73,12 @@ def read_segment_list(path: Path, type, img_dir):
     default=Path("/scratch/lt2326-2926-h24/ThaiOCR/ThaiOCR-TestSet"),
 )
 @click.option(
-    "-c",
-    "--category",
+    "-d",
+    "--dpi",
     multiple=True,
-    type=click.Choice(["200dpi_BW", "200dpi_Gray", "300dpi_BW", "300dpi_Gray"]),
+    # TODO we should just use the already-thresholded BW images
+    # type=click.Choice(["200dpi_BW", "200dpi_Gray", "300dpi_BW", "300dpi_Gray"]),
+    type=click.Choice([200, 300]),
 )
 @click.option(
     "-t",
@@ -68,14 +87,18 @@ def read_segment_list(path: Path, type, img_dir):
     type=click.Choice(["Book", "Journal"]),
     default=["Book", "Journal"],
 )
-def main(input_path, category, types):
+def main(input_path, dpi, types):
+    # TODO add logic for reading + label adding
     for t in types:
         type_dir = input_path / t
         image_dir = type_dir / "Image"
         txt_dir = type_dir / "Txt"
         segment_list = type_dir / f"{t}List.txt"
-        segments = read_segment_list(segment_list, t, image_dir)
-        # TODO add txt contents, image grabber
+        for d in dpi:
+            pth = f"{d}dpi_BW"
+            segments = read_segment_list(segment_list, t, image_dir)
+            # TODO add txt contents, image grabber
+            # TODO allow reading b/w files as well
 
 
 if __name__ == "__main__":
