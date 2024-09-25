@@ -2,3 +2,6 @@
 *.pth
 *.log
 *.pyc
+# Images
+*.bmp
+*.png
