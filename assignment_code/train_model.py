@@ -58,6 +58,7 @@ def main(
         print("CUDA is not available, will train on CPU")
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    logger.info(f"Using device: {device}")
     model.to(device)
 
     for epoch in range(epochs):
