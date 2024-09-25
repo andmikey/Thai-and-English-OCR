@@ -156,9 +156,13 @@ def main(
         f"Test:  {testing_set.count_points()}\n",
         f"Val:   {validation_set.count_points()}\n",
     )
-    training_set.write_to_file(output_path, "training_set.txt")
-    testing_set.write_to_file(output_path, "testing_set.txt")
-    validation_set.write_to_file(output_path, "validation_set.txt")
+    # If specified proportion is zero, we don't write to file
+    if train_proportion != 0:
+        training_set.write_to_file(output_path, "training_set.txt")
+    if test_proportion != 0:
+        testing_set.write_to_file(output_path, "testing_set.txt")
+    if validation_proportion != 0:
+        validation_set.write_to_file(output_path, "validation_set.txt")
 
 
 if __name__ == "__main__":
