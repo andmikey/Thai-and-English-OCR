@@ -7,9 +7,14 @@ echo $experiment_path
 # Set up directories
 mkdir -p $experiment_path/data/ $experiment_path/outputs/
 
-# Train and test on all Thai normal data (200dpi)
+# Training data all Thai normal 400dpi text (generates just a training_set.txt file)
 python3 ../assignment_code/generate_training_data.py \
-    -l Thai -d 200 -s normal \
+    -l Thai -d 400 -s normal -trp 1 -tep 0 -vap 0 \
+    --output_path $experiment_path/data/
+
+# Testing data is all Thai bold 400 dpi text (generates just a testing_set.txt file)
+python3 ../assignment_code/generate_training_data.py \
+    -l Thai -d 400 -s bold -trp 0 -tep 1 -vap 0 \
     --output_path $experiment_path/data/
 
 # Train the model

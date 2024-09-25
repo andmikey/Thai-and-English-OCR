@@ -7,9 +7,9 @@ echo $experiment_path
 # Set up directories
 mkdir -p $experiment_path/data/ $experiment_path/outputs/
 
-# Train and test on all Thai normal data (200dpi)
+# Train and test on all Thai and English data
 python3 ../assignment_code/generate_training_data.py \
-    -l Thai -d 200 -s normal \
+    -d 200 \
     --output_path $experiment_path/data/
 
 # Train the model

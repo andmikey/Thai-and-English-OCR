@@ -7,15 +7,19 @@ echo $experiment_path
 # Set up directories
 mkdir -p $experiment_path/data/ $experiment_path/outputs/
 
-# Train and test on all Thai normal data (200dpi)
+# Training data is all Thai bold text (generates just a training_set.txt file)
 python3 ../assignment_code/generate_training_data.py \
-    -l Thai -d 200 -s normal \
+    -l Thai -d 200 -s bold -trp 1 -tep 0 -vap 0 \
+    --output_path $experiment_path/data/
+
+# Testing data is all Thai normal text (generates just a testing_set.txt file)
+python3 ../assignment_code/generate_training_data.py \
+    -l Thai -d 200 -s normal -trp 0 -tep 1 -vap 0 \
     --output_path $experiment_path/data/
 
 # Train the model
 python3 ../assignment_code/train_model.py \
     --train-data $experiment_path/data/training_set.txt \
-    --validation-data $experiment_path/data/validation_set.txt \
     --save-dir $experiment_path/outputs/ \
     --batches $NUM_BATCHES --epochs $NUM_EPOCHS
 
