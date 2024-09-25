@@ -77,11 +77,12 @@ def main(
         train_eval.calculate_metrics()
         logger.info(f"Training evaluation: {train_eval}")
 
-        # Evaluate on validation
-        val_eval = utils.Evaluator(model, validate, device)
-        val_eval.run_on_input()
-        val_eval.calculate_metrics()
-        logger.info(f"Validation evaluation: {val_eval}")
+        if validation_data:
+            # Evaluate on validation
+            val_eval = utils.Evaluator(model, validate, device)
+            val_eval.run_on_input()
+            val_eval.calculate_metrics()
+            logger.info(f"Validation evaluation: {val_eval}")
 
     logger.info(f"Saving model to {save_dir / 'model.pth'}")
     torch.save(model.state_dict(), save_dir / "model.pth")

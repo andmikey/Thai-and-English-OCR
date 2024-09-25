@@ -20,7 +20,6 @@ python3 ../assignment_code/generate_training_data.py \
 # Train the model
 python3 ../assignment_code/train_model.py \
     --train-data $experiment_path/data/training_set.txt \
-    --validation-data $experiment_path/data/validation_set.txt \
     --save-dir $experiment_path/outputs/ \
     --batches $NUM_BATCHES --epochs $NUM_EPOCHS
 

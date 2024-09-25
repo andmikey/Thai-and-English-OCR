@@ -2,7 +2,7 @@
 set -eo pipefail
 
 experiment_path=$(pwd)/$(dirname "$0")
-echo $experiment_path
+echo "Running experiment: $(dirname $0)"
 
 # Set up directories
 mkdir -p $experiment_path/data/ $experiment_path/outputs/
