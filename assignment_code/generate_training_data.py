@@ -96,6 +96,7 @@ def split_dataset(
     default=Path("/scratch/lt2326-2926-h24/ThaiOCR/ThaiOCR-TrainigSet"),
 )
 @click.option("-o", "--output_path", type=click.Path(exists=True, path_type=Path))
+@click.option("-l", "--logging_path", type=click.File(path_type=Path))
 @click.option("-r", "--random_seed", type=int, default=42, required=False)
 def main(
     language,
@@ -106,11 +107,12 @@ def main(
     validation_proportion,
     input_path,
     output_path,
+    logging_path,
     random_seed,
 ):
     # Set up logging
     logging.basicConfig(
-        filename=output_path / "training.log",
+        filename=logging_path,
         filemode="a",
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",

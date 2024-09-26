@@ -16,11 +16,11 @@ from model import BasicNetwork
 )
 @click.option("--model-path", type=click.File(exists=True, path_type=Path))
 @click.option("--batches", type=int, default=1)
-@click.option("--save-dir", type=click.Path(exists=True, path_type=Path))
-def main(test_data, model_path, batches, save_dir):
+@click.option("--logging_path", type=click.File(path_type=Path))
+def main(test_data, model_path, batches, save_dir, logging_path):
     # Set up logging
     logging.basicConfig(
-        filename=save_dir / "training.log",
+        filename=logging_path,
         filemode="a",
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",

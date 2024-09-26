@@ -25,16 +25,11 @@ from model import BasicNetwork
 @click.option("--batches", type=int, default=1)
 @click.option("--epochs", type=int, default=100)
 @click.option("--save-dir", type=click.Path(exists=True, path_type=Path))
-def main(
-    train_data,
-    validation_data,
-    batches,
-    epochs,
-    save_dir,
-):
+@click.option("--logging_path", type=click.File(path_type=Path))
+def main(train_data, validation_data, batches, epochs, save_dir, logging_path):
     # Set up logging
     logging.basicConfig(
-        filename=save_dir / "training.log",
+        filename=logging_path,
         filemode="a",
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",
@@ -68,6 +63,7 @@ def main(
             inputs, labels = data[0].to(device), data[1].to(device)
             optimizer.zero_grad()
             outputs = model(inputs)
+            # TODO check happy with the loss method here
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
