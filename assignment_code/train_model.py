@@ -40,6 +40,7 @@ def main(
         format="%(asctime)s - %(levelname)s - %(message)s",
     )
     logger = logging.getLogger(__name__)
+    logger.info("Starting training run")
 
     # Load the data
     train = utils.load_datasets(train_data, batches)
@@ -63,6 +64,7 @@ def main(
 
     for epoch in range(epochs):
         for idx, data in enumerate(train.loader, 0):
+            # TODO would be nice to plot training loss here
             inputs, labels = data[0].to(device), data[1].to(device)
             optimizer.zero_grad()
             outputs = model(inputs)
