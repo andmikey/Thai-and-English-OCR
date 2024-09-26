@@ -1,3 +1,4 @@
+import logging
 import random
 from collections import defaultdict
 from dataclasses import dataclass
@@ -68,7 +69,7 @@ def split_dataset(
     multiple=True,
     default=["English", "Thai"],
     type=click.Choice(["English", "Thai", "Special", "Numeric"]),
-)  # Empty means use all
+)
 @click.option(
     "-d",
     "--dpi",
@@ -107,6 +108,15 @@ def main(
     output_path,
     random_seed,
 ):
+    # Set up logging
+    logging.basicConfig(
+        filename=output_path / "training.log",
+        filemode="a",
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+    )
+    logger = logging.getLogger(__name__)
+
     # Validate proportion inputs
     if train_proportion + test_proportion + validation_proportion != 1:
         raise AssertionError(
@@ -150,18 +160,22 @@ def main(
                     testing_set.add_points(key, test)
                     validation_set.add_points(key, val)
 
+    # TODO this should log to a logger
     # Write out the train/test/validation sets to the given output path
-    print(
+    logger.info(
         f"Generated data points:\n Train: {training_set.count_points()}\n",
         f"Test:  {testing_set.count_points()}\n",
         f"Val:   {validation_set.count_points()}\n",
     )
     # If specified proportion is zero, we don't write to file
     if train_proportion != 0:
+        logger.info(f"Writing out training set to {output_path/'training_set.txt'}")
         training_set.write_to_file(output_path, "training_set.txt")
     if test_proportion != 0:
+        logger.info(f"Writing out testing set to {output_path/'testing_set.txt'}")
         testing_set.write_to_file(output_path, "testing_set.txt")
     if validation_proportion != 0:
+        logger.info(f"Writing out validation set to {output_path/'validation_set.txt'}")
         validation_set.write_to_file(output_path, "validation_set.txt")
 
 

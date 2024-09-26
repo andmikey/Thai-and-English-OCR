@@ -14,7 +14,7 @@ from model import BasicNetwork
     multiple=True,
     required=True,
 )
-@click.option("--model-path", type=click.Path(exists=True, path_type=Path))
+@click.option("--model-path", type=click.File(exists=True, path_type=Path))
 @click.option("--batches", type=int, default=1)
 @click.option("--save-dir", type=click.Path(exists=True, path_type=Path))
 def main(test_data, model_path, batches, save_dir):
@@ -29,7 +29,7 @@ def main(test_data, model_path, batches, save_dir):
 
     model = BasicNetwork(utils.NUM_CLASSES, 64)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model.load_state_dict(torch.load(model_path / "model.pth", weights_only=True))
+    model.load_state_dict(torch.load(model_path, weights_only=True))
     model.to(device)
 
     test = utils.load_datasets(test_data, batches)
