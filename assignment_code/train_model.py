@@ -77,7 +77,7 @@ def main(train_data, validation_data, batches, epochs, save_dir, logging_path):
     # Plot graph of training loss
     fig, ax = plt.subplots()
     ax.set_title(f"Training loss for {epoch} epochs")
-    plt.plot(loss_for_training, ax=ax)
+    ax.plot(loss_for_training)
     fig.savefig(save_dir / "training_loss.png")
 
     # Evaluate performance on training and validation sets
