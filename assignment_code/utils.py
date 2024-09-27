@@ -45,7 +45,7 @@ class ImageDataset(Dataset):
 class Dataset:
     def __init__(self, paths, batches):
         self.dataset = ImageDataset(paths)
-        self.loader = DataLoader(self.dataset, batch_size=batches)
+        self.loader = DataLoader(self.dataset, batch_size=batches, shuffle=True)
 
     def info(self):
         self.points = len(self.dataset)

@@ -106,7 +106,7 @@ Training on wide distribution performs fairly poorly. Would need to increase epo
 
 Some of the performances are suspiciously low, wondering if there's a bug in the evaluation. Thai normal text 400 dpi - training results about half of testing results. Thai bold way too low. 
 
-The biggest training... seems to not train at all. Possible issues? Loss jumps around a lot. Could use a different optimizer. Larger batch size. Maybe didn't shuffle the data?
+The biggest training... seems to not train at all. Possible issues? Loss jumps around a lot. Could use a different optimizer. Larger batch size. Maybe didn't shuffle the data? -> indeed did not shuffle the data, found bug in training data generation code. Added shuffle as argument to the dataset loader so hopefully will help train a better model for the bonus question.
 
 ### Train on Thai normal text, 200dpi, test on Thai normal text, 200dpi
 
