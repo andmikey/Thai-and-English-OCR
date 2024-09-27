@@ -37,6 +37,9 @@ def main(train_data, validation_data, batches, epochs, save_dir, logging_path):
     )
     logger = logging.getLogger(__name__)
     logger.info("Starting training run")
+    logger.info(
+        f"Starting training model with training data {train_data} and validation data {validation_data}"
+    )
 
     # Load the data
     train = utils.load_datasets(train_data, batches)

@@ -26,6 +26,9 @@ def main(test_data, model_path, batches, logging_path):
         format="%(asctime)s - %(levelname)s - %(message)s",
     )
     logger = logging.getLogger(__name__)
+    logger.info(
+        f"Starting model evaluation with model {model_path} on test data located at {test_data}"
+    )
 
     model = BasicNetwork(utils.NUM_CLASSES, 64)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

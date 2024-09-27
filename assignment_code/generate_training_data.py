@@ -118,6 +118,7 @@ def main(
         format="%(asctime)s - %(levelname)s - %(message)s",
     )
     logger = logging.getLogger(__name__)
+    logger.info("Starting training data generation")
 
     # Validate proportion inputs
     if train_proportion + test_proportion + validation_proportion != 1:
