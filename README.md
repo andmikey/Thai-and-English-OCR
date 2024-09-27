@@ -97,6 +97,17 @@ The output is *not* softmaxed - I'd initially applied a softmax but the PyTorch 
 
 I ran all experiments with a batch size of 10 for 20 epochs. I chose these parameters arbitrarily. If I had more time I would have liked to do be more smart about this e.g. do some experiments to explore the impact of batch size on training performance, or include a smarter stopping criterion with an upper bound on the number of training epochs.
 
+### Overview
+Epochs too low. Lots of space left for loss to reduce.  
+
+Performs best when train and test datasets come from the same distribution, as you would expect. 
+
+Training on wide distribution performs fairly poorly. Would need to increase epochs by a lot to get a better model, because the loss does seem to be decreasing. 
+
+Some of the performances are suspiciously low, wondering if there's a bug in the evaluation. Thai normal text 400 dpi - training results about half of testing results. Thai bold way too low. 
+
+The biggest training... seems to not train at all. Possible issues? Loss jumps around a lot. Could use a different optimizer. Larger batch size. Maybe didn't shuffle the data?
+
 ### Train on Thai normal text, 200dpi, test on Thai normal text, 200dpi
 
 | Section | Dataset size | 
@@ -183,8 +194,6 @@ Training loss:
 | Train | 64922 | 
 | Validate | 22624 |
 | Test | 21442 | 
-
-TODO update mtrics 
 
 Metric | Train | Validation | Test |  
 ---|---|---|---|
