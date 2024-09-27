@@ -37,6 +37,9 @@ def main(train_data, validation_data, batches, epochs, save_dir, logging_path):
     )
     logger = logging.getLogger(__name__)
     logger.info("Starting training run")
+    logger.info(
+        f"Starting training model with training data {train_data} and validation data {validation_data}"
+    )
 
     # Load the data
     train = utils.load_datasets(train_data, batches)
@@ -76,7 +79,10 @@ def main(train_data, validation_data, batches, epochs, save_dir, logging_path):
 
     # Plot graph of training loss
     fig, ax = plt.subplots()
-    ax.set_title(f"Training loss for {epoch} epochs")
+    ax.set_title(f"Training loss for {epochs} epochs")
+    ax.set_ylabel("Mean loss for epoch")
+    ax.set_xlabel("Epoch")
+    ax.set_xticks([x for x in range(epochs)])
     ax.plot(loss_for_training)
     fig.savefig(save_dir / "training_loss.png")
 

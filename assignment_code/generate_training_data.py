@@ -50,6 +50,9 @@ def split_dataset(
     validation_proportion: float,
 ) -> Tuple[List, List, List]:
     # Shuffle the list before doing anything to it
+    # NOTE I realized after running all the experiments that this still means the entire dataset is not shuffled,
+    # only the specific subset we're looking at here (lang, char, dpi, style). I didn't want to rerun all my analysis
+    # so I've left as-is :( And fixed in the DataLoader by adding a shuffle=True argument.
     random.shuffle(items)
 
     num_train = int(train_proportion * len(items))
@@ -118,6 +121,7 @@ def main(
         format="%(asctime)s - %(levelname)s - %(message)s",
     )
     logger = logging.getLogger(__name__)
+    logger.info("Starting training data generation")
 
     # Validate proportion inputs
     if train_proportion + test_proportion + validation_proportion != 1:
@@ -162,7 +166,6 @@ def main(
                     testing_set.add_points(key, test)
                     validation_set.add_points(key, val)
 
-    # TODO this should log to a logger
     # Write out the train/test/validation sets to the given output path
     logger.info("Generated data points:")
     logger.info(f"Train: {training_set.count_points()}")
@@ -170,6 +173,7 @@ def main(
     logger.info(f"Val:   {validation_set.count_points()}")
 
     # If specified proportion is zero, we don't write to file
+    # This allows us to generate train and test from different distributions
     if train_proportion != 0:
         logger.info(f"Writing out training set to {output_path/'training_set.txt'}")
         training_set.write_to_file(output_path, "training_set.txt")

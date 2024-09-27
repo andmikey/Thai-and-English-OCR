@@ -14,7 +14,7 @@ from model import BasicNetwork
     multiple=True,
     required=True,
 )
-@click.option("--model_path", type=click.File(exists=True, path_type=Path))
+@click.option("--model_path", type=click.Path(exists=True, path_type=Path))
 @click.option("--batches", type=int, default=1)
 @click.option("--logging_path", type=click.Path(path_type=Path))
 def main(test_data, model_path, batches, logging_path):
@@ -26,6 +26,9 @@ def main(test_data, model_path, batches, logging_path):
         format="%(asctime)s - %(levelname)s - %(message)s",
     )
     logger = logging.getLogger(__name__)
+    logger.info(
+        f"Starting model evaluation with model {model_path} on test data located at {test_data}"
+    )
 
     model = BasicNetwork(utils.NUM_CLASSES, 64)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

@@ -9,7 +9,7 @@ mkdir -p $experiment_path/data/ $experiment_path/outputs/
 
 # Train and test on all Thai data
 python3 ../assignment_code/generate_training_data.py \
-    -l Thai \
+    -l Thai -d 200 \
     --output_path $experiment_path/data/ \
     --logging_path $experiment_path/results.log
 
@@ -24,5 +24,5 @@ python3 ../assignment_code/train_model.py \
 # Evaluate the model
 python3 ../assignment_code/evaluate_model.py \
     --test-data $experiment_path/data/testing_set.txt \
-    --model_path $experiment_path/outputs/ \
+    --model_path $experiment_path/outputs/model.pth \
     --logging_path $experiment_path/results.log
