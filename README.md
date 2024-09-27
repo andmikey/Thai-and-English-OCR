@@ -32,7 +32,7 @@ python3 assignment_code/generate_training_data.py
     --style normal # Default: all styles
     --train_proportion 0.7 --validation_proportion 0.15 --test_proportion 0.15 # Default: 60/20/20
     --output_path some_training_data_folder
-    --logging-path results.log
+    --logging_path results.log
 ```
 
 This will create three files in `some_training_data_folder`: `training_set.txt`, `validation_set.txt`, `testing_set.txt`; and log the size and path of each dataset to `result.log`.
@@ -45,8 +45,8 @@ Use the [model training script](./assignment_code/train_model.py) to train a mod
 python3 assignment_code/train_model.py 
     --train-data some_training_data_folder/training_set.txt 
     --validation-data some_training_data_folder/validation_set.txt 
-    --save-dir some_results_folder
-    --logging-path results.log
+    --save_dir some_results_folder
+    --logging_path results.log
     --batches 1 # Default 1
     --epochs 10 # Default 100
 ```
@@ -63,8 +63,8 @@ Use the [model evaluation script](./assignment_code/evaluate_model.py) to evalua
 ```sh
 python3 assignment_code/evaluate_model.py 
     --test-data some_training_data_foldertesting_set.txt 
-    --model-path some_results_folder/model.pth 
-    --logging-path results.log
+    --model_path some_results_folder/model.pth 
+    --logging_path results.log
 ```
 
 This will log the results of model evaluation (precision, recall, F1, accuracy) to `results.log`. 
