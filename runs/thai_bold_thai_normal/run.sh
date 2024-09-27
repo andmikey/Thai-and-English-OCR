@@ -29,5 +29,5 @@ python3 ../assignment_code/train_model.py \
 # Evaluate the model
 python3 ../assignment_code/evaluate_model.py \
     --test-data $experiment_path/data/testing_set.txt \
-    --model_path $experiment_path/outputs/ \
+    --model_path $experiment_path/outputs/model.pth \
     --logging_path $experiment_path/results.log

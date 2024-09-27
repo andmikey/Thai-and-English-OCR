@@ -52,7 +52,8 @@ python3 assignment_code/train_model.py
 ```
 
 This will save:
-- A training log to `results.log`, giving performance on train, test, and (optionally) validation
+- A training log to `results.log`, giving performance on train, test, and (optionally) validation.
+- A plot of the per-epoch training loss (average across the batches in the epoch) to `some_results_folder/training_log.png`.
 - The trained model to `some_results_folder/model.pth`. 
 
 
@@ -88,9 +89,28 @@ All the images come in slightly different shapes, even in the same DPI, which ma
 ### Architecture
 I chose to use [LeNet 5](https://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf) as the architecture for this task.
 
-The model outputs a vector that's equivalent in length to the number of classes: `output[i]` will get the probability of class `i`, where `i` is the numerical class assignment defined in [any of the training dataset descriptions](/scratch/lt2326-2926-h24/ThaiOCR/ThaiOCR-TrainigSet/English/20110202-List-Code-Character-OCR-Training-Database.txt). The output is softmaxed in order to get a probability distribution on the outputs. The most probable class can then by chosen by returning the highest-probability index.  
+The model outputs a vector that's equivalent in length to the number of classes: `output[i]` will get the probability of class `i`, where `i` is the numerical class assignment defined in [any of the training dataset descriptions](/scratch/lt2326-2926-h24/ThaiOCR/ThaiOCR-TrainigSet/English/20110202-List-Code-Character-OCR-Training-Database.txt). The most probable class can then by chosen by returning the highest-probability index.  
+
+The output is *not* softmaxed - I'd initially applied a softmax but the PyTorch CrossEntropyLoss applies softmax as part of the loss, so doing so is unneeded. You could softmax the output of the model after it returns its predictions if you want to have a probability distribution on the output classes. 
 
 ## Experiment results
+
+I ran all experiments with a batch size of 10 for 20 epochs. I chose these parameters arbitrarily. If I had more time I would have liked to do be more smart about this e.g. do some experiments to explore the impact of batch size on training performance, or include a smarter stopping criterion with an upper bound on the number of training epochs.
+
+### Train on Thai normal text, 200dpi, test on Thai normal text, 200dpi
+
+### Train on Thai normal text, 400dpi, test on Thai normal text, 200dpi
+
+### Train on Thai normal text, 400 dpi, test on Thai bold text, 400dpi
+
+### Train on Thai bold text, test on Thai normal text
+
+### Train on all Thai styles, test on all Thai styles
+
+### Train on Thai and English normal text jointly, test on Thai and English normal text jointly
+
+### Train on all Thai and English styles jointly, test on all Thai and English styles jointly
+
 
 ## Bonus section
 ### Formatting
