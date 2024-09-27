@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 import click
+import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -57,16 +58,25 @@ def main(train_data, validation_data, batches, epochs, save_dir, logging_path):
     logger.info(f"Using device: {device}")
     model.to(device)
 
+    loss_for_training = []
     for epoch in range(epochs):
+        loss_at_step = []
         for idx, data in enumerate(train.loader, 0):
-            # TODO would be nice to plot training loss here
             inputs, labels = data[0].to(device), data[1].to(device)
             optimizer.zero_grad()
             outputs = model(inputs)
-            # TODO check happy with the loss method here
             loss = criterion(outputs, labels)
+            loss_at_step.append(loss.item())
             loss.backward()
             optimizer.step()
+        # Track mean loss for each epoch
+        loss_for_training.append(sum(loss_at_step) / len(loss_at_step))
+
+    # Plot graph of training loss
+    fig, ax = plt.subplots()
+    ax.set_title(f"Training loss for {epoch} epochs")
+    plt.plot(loss_for_training, ax=ax)
+    fig.savefig(save_dir / "training_loss.png")
 
     # Evaluate performance on training and validation sets
     with torch.no_grad():
