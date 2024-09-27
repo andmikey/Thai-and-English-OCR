@@ -24,8 +24,8 @@ from model import BasicNetwork
 )
 @click.option("--batches", type=int, default=1)
 @click.option("--epochs", type=int, default=100)
-@click.option("--save-dir", type=click.Path(exists=True, path_type=Path))
-@click.option("--logging_path", type=click.File(path_type=Path))
+@click.option("--save_dir", type=click.Path(exists=True, path_type=Path))
+@click.option("--logging_path", type=click.Path(path_type=Path))
 def main(train_data, validation_data, batches, epochs, save_dir, logging_path):
     # Set up logging
     logging.basicConfig(

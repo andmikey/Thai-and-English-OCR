@@ -14,11 +14,12 @@ class BasicNetwork(nn.Module):
         tanh = nn.Tanh()
         fc2 = nn.Linear(in_features=120, out_features=84)
         fc3 = nn.Linear(in_features=84, out_features=num_classes)
-        # Adjust output so all probabilities sum to 1
-        softmax = nn.Softmax()
+        # PyTorch CrossEntropyLoss() handles the softmax for us, so don't need to
+        # do it here
+        # softmax = nn.Softmax()
 
         self.feature = nn.Sequential(conv1, tanh, avgp, conv2, tanh, avgp)
-        self.classifier = nn.Sequential(fl, fc, tanh, fc2, tanh, fc3, softmax)
+        self.classifier = nn.Sequential(fl, fc, tanh, fc2, tanh, fc3)
 
     def forward(self, x):
         # Needs to return tensor in the shape (num_classes)

@@ -96,7 +96,7 @@ def split_dataset(
     default=Path("/scratch/lt2326-2926-h24/ThaiOCR/ThaiOCR-TrainigSet"),
 )
 @click.option("-o", "--output_path", type=click.Path(exists=True, path_type=Path))
-@click.option("-l", "--logging_path", type=click.File(path_type=Path))
+@click.option("-l", "--logging_path", type=click.Path(path_type=Path))
 @click.option("-r", "--random_seed", type=int, default=42, required=False)
 def main(
     language,
@@ -164,11 +164,11 @@ def main(
 
     # TODO this should log to a logger
     # Write out the train/test/validation sets to the given output path
-    logger.info(
-        f"Generated data points:\n Train: {training_set.count_points()}\n",
-        f"Test:  {testing_set.count_points()}\n",
-        f"Val:   {validation_set.count_points()}\n",
-    )
+    logger.info("Generated data points:")
+    logger.info(f"Train: {training_set.count_points()}")
+    logger.info(f"Test:  {testing_set.count_points()}")
+    logger.info(f"Val:   {validation_set.count_points()}")
+
     # If specified proportion is zero, we don't write to file
     if train_proportion != 0:
         logger.info(f"Writing out training set to {output_path/'training_set.txt'}")

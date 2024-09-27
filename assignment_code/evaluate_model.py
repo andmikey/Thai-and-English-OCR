@@ -14,10 +14,10 @@ from model import BasicNetwork
     multiple=True,
     required=True,
 )
-@click.option("--model-path", type=click.File(exists=True, path_type=Path))
+@click.option("--model_path", type=click.File(exists=True, path_type=Path))
 @click.option("--batches", type=int, default=1)
-@click.option("--logging_path", type=click.File(path_type=Path))
-def main(test_data, model_path, batches, save_dir, logging_path):
+@click.option("--logging_path", type=click.Path(path_type=Path))
+def main(test_data, model_path, batches, logging_path):
     # Set up logging
     logging.basicConfig(
         filename=logging_path,
