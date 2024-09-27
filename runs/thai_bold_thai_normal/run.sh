@@ -9,7 +9,7 @@ mkdir -p $experiment_path/data/ $experiment_path/outputs/
 
 # Training data is all Thai bold text (generates just a training_set.txt file)
 python3 ../assignment_code/generate_training_data.py \
-    -l Thai -d 200 -s bold -trp 1 -tep 0 -vap 0 \
+    -l Thai -d 200 -s bold -trp 0.8 -tep 0 -vap 0.2 \
     --output_path $experiment_path/data/ \
     --logging_path $experiment_path/results.log
 
@@ -22,6 +22,7 @@ python3 ../assignment_code/generate_training_data.py \
 # Train the model
 python3 ../assignment_code/train_model.py \
     --train-data $experiment_path/data/training_set.txt \
+    --validation-data $experiment_path/data/validation_set.txt \
     --save_dir $experiment_path/outputs/ \
     --batches $NUM_BATCHES --epochs $NUM_EPOCHS \
     --logging_path $experiment_path/results.log

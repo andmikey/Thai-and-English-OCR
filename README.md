@@ -99,19 +99,94 @@ I ran all experiments with a batch size of 10 for 20 epochs. I chose these param
 
 ### Train on Thai normal text, 200dpi, test on Thai normal text, 200dpi
 
+Metric | Train | Validation | Test |  
+---|---|---|---|
+Precision | 37.926% | 37.579% | 38.342% | 
+Recall | 44.320% | 41.775% | 42.691% | 
+F1 | 33.097% | 32.411% | 33.257% | 
+Accuracy | 39.051% | 38.610% | 39.563% | 
+
+Training loss:
+
+![](./runs/thai_normal_200/outputs/training_loss.png)
+
 ### Train on Thai normal text, 400dpi, test on Thai normal text, 200dpi
 
-### Train on Thai normal text, 400 dpi, test on Thai bold text, 400dpi
+Metric | Train | Validation | Test |  
+---|---|---|---|
+Precision | 32.696% | 32.068% | 29.360%
+Recall | 34.865% | 33.611% | 32.801%
+F1 | 26.000% | 25.506% | 22.793%
+Accuracy | 33.741% | 33.060% | 30.213%
+
+Training loss:
+
+![](./runs/thai_normal_400_thai_normal_200/outputs/training_loss.png)
+
+### Train on Thai normal text, 400dpi, test on Thai bold text, 400dpi
+
+Metric | Train | Validation | Test |  
+---|---|---|---|
+Precision | 14.565% | 14.065% | 11.971%
+Recall | 11.070% | 10.709% | 11.032%
+F1 | 8.236% | 7.847%  | 6.962%
+Accuracy | 15.176% | 14.640% | 12.441%
+
+Training loss:
+
+![](./runs/thai_normal_400_thai_bold_400/outputs/training_loss.png)
+
 
 ### Train on Thai bold text, test on Thai normal text
 
+Metric | Train | Validation | Test |  
+---|---|---|---|
+Precision | 9.490% | 9.468% | 7.267%
+Recall | 5.430% | 4.459% | 3.772%
+F1 | 3.901% | 3.936% | 3.193%
+Accuracy | 9.788% | 9.759% | 7.514%
+
+
+Training loss:
+
+![](./runs/thai_bold_thai_normal/outputs/training_loss.png)
+
+
 ### Train on all Thai styles, test on all Thai styles
+
+Metric | Train | Validation | Test |  
+---|---|---|---|
+Precision | 2.564% | 2.553% | 2.560%
+Recall | 0.517% | 0.555% | 0.581%
+F1 | 0.454% | 0.451% | 0.458%
+Accuracy | 2.679% | 2.665% | 2.675%
+
+Training loss:
+
+![](./runs/all_thai/outputs/training_loss.png)
 
 ### Train on Thai and English normal text jointly, test on Thai and English normal text jointly
 
+Metric | Train | Validation | Test |  
+---|---|---|---|
+Precision | 8.952% | 8.951% | 8.906% | 
+Recall | 3.907% | 2.774% | 4.751% | 
+F1 | 3.288% | 3.143% | 3.340% | 
+Accuracy | 9.229% | 9.232% | 9.186% | 
+
+Training loss:
+
+![](./runs/thai_english_normal_jointly/outputs/training_loss.png)
+
 ### Train on all Thai and English styles jointly, test on all Thai and English styles jointly
 
+Metric | Train | Validation | Test |  
+---|---|---|---|
+Precision | 0.662% | 0.662% | 0.662%
+Recall | 0.005% | 0.005% | 0.005%
+F1 | 0.009% | 0.009% | 0.009%
+Accuracy | 0.690% | 0.690% | 0.690%
 
-## Bonus section
-### Formatting
-Last letter (b/g) indicates if b/w or grayscale. Dims are for grayscale only. Seems to work well enough for the bw too, though, from testing. 
+Training loss:
+
+![](./runs/all_thai_english_jointly/outputs/training_loss.png)
