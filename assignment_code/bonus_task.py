@@ -19,7 +19,7 @@ class Segment:
     y_end: int
     segment_type: str
     type: str
-    characters = []
+    characters = {}
 
     def get_image_of_segment(self):
         img = Image.open(self.path).crop(
@@ -32,10 +32,15 @@ class Segment:
         # Use OpenCV to get bounding box rectangles for letters
         contours, _ = cv.findContours(arr, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
         for cnt in contours:
-            # Maybe want to do some filtering here to make sure we get large enough boxes
-            x, y, w, h = cv.boundingRect(cnt)
-            letter_crop = self.img.crop((x, y, x + w, y + h))
-            self.characters += letter_crop
+            # Only save sufficiently large boxes
+            # I found this width/height combo by manual inspection
+            if w > 5 and h > 10:
+                x, y, w, h = cv.boundingRect(cnt)
+                # Add a bit of flex top/bottom to get vowel diacritics
+                letter_crop = self.img.crop((x, y - 20, x + w, y + h + 20))
+                self.characters[(x, y, x + w, y + h)] = letter_crop
+
+        # TODO order characters left-right top-bottom
 
 
 def read_segment_list(path: Path, type, img_dir):
