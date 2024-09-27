@@ -1,29 +1,97 @@
 # Thai and English OCR 
 
+This repository details my solution for assignment 1 of LT2926 at the University of Gothenburg (Machine learning for statistical NLP: advanced), building a system for Thai and English OCR. 
+
 ## Instructions for use 
-### Create the conda environment 
-`conda env create -f setup_files/environment.yml --prefix /scratch/gusandmich/conda_envs`
-`conda activate assignment_1`
+
+Tl;dr if you want to run all the experiments required for this assignment, run `bash /home/gusandmich@GU.GU.SE/assignment_1/runs/do_all_runs.sh`. **This will overwrite all existing runs in that folder.**
+
+Otherwise read below for instructions on how to use the individual scripts. 
+
+### (Optional) Create the conda environment 
+
+While waiting for the main server environment to be set up with the packages I needed, I set up a Conda environment with the necessary packages. You can install and use it as below:
+
+```sh
+conda env create -f setup_files/environment.yml --prefix /scratch/gusandmich/
+conda activate /scratch/gusandmich/assignment_1_scratch/
+``` 
+
+Note I had to put it in `/scratch/gusandmich` rather than `/home/gusandmich` because `/home` is much too slow; loading all the packages from disk took too long when the Conda env lived there. 
+
+### Generate training data
+
+The [training data generation script](./assignment_code/generate_training_data.py) allows setting the languages, dpis and styles of generated data; as well as the train/test/validation split. 
+
+For example, to generate a dataset of normal Thai and English text at 300 DPI, with 70% of data for train and 15% for validation and test respectively:
+
+```sh
+python3 assignment_code/generate_training_data.py
+    --language Thai --language English # Default: all languages
+    --dpi 300 # Default: all DPIs
+    --style normal # Default: all styles
+    --train_proportion 0.7 --validation_proportion 0.15 --test_proportion 0.15 # Default: 60/20/20
+    --output_path some_training_data_folder
+    --logging_path results.log
+```
+
+This will create three files in `some_training_data_folder`: `training_set.txt`, `validation_set.txt`, `testing_set.txt`; and log the size and path of each dataset to `result.log`.
+
+### Train a model
+
+Use the [model training script](./assignment_code/train_model.py) to train a model on a given training set, and optionally report performance on a validation set:
+
+```sh
+python3 assignment_code/train_model.py 
+    --train-data some_training_data_folder/training_set.txt 
+    --validation-data some_training_data_folder/validation_set.txt 
+    --save_dir some_results_folder
+    --logging_path results.log
+    --batches 1 # Default 1
+    --epochs 10 # Default 100
+```
+
+This will save:
+- A training log to `results.log`, giving performance on train, test, and (optionally) validation
+- The trained model to `some_results_folder/model.pth`. 
+
+
+### Evaluate a trained model
+
+Use the [model evaluation script](./assignment_code/evaluate_model.py) to evaluate a model on a given testing set:
+
+```sh
+python3 assignment_code/evaluate_model.py 
+    --test-data some_training_data_foldertesting_set.txt 
+    --model_path some_results_folder/model.pth 
+    --logging_path results.log
+```
+
+This will log the results of model evaluation (precision, recall, F1, accuracy) to `results.log`. 
 
 ## Comments on challenges / decisions
-### Saving the training data
-Wrote paths to a file. Means you don't copy the data anywhere, fast to retrieve. 
+### Generating data
+I generate the train/test/val datasets by writing a file in the format:
+
+```
+language,dpi,style,class_index,image_path
+Thai,200,bold,199,/scratch/lt2326-2926-h24/ThaiOCR/ThaiOCR-TrainigSet/Thai/199/200/bold/KKTS212_200_31_20_199.bmp
+```
+
+This means the dataset definition uses up very little space and does not require copying any images around. 
 
 ### Image format
-BMP, so can't load with [decode_image](https://pytorch.org/vision/main/generated/torchvision.io.decode_image.html#torchvision.io.decode_image) (not a supported format). 
+The provided images are in BMP, so we can't load them with [decode_image](https://pytorch.org/vision/main/generated/torchvision.io.decode_image.html#torchvision.io.decode_image) (BMP is not one of the supported formats). Instead, I use PIL to load the image and then convert it to a tensor. 
 
-Could either upscale the training data then test on actual data, or train on training data and downscale the testing data. 
-
-Input shapes?
-PIL -> Tensorflow is loaded as one-channel array. From visual inspection, true is white, false is black. Convert to array of longs - 0 is black, 1 is white.
-
-Thai:
-Images all come as different shapes, even in the same DPI, which is really annoying! 
-Just reshape everything to 64x64. 
+All the images come in slightly different shapes, even in the same DPI, which makes training tricky because the model should (generally) expect to receive everything in the same input size. I dealt with this by [resizing all images](https://pytorch.org/vision/main/generated/torchvision.transforms.Resize.html), regardless of DPI, to 64x64 images. 
 
 ### Architecture
-Went with LeNet 5. 
+I chose to use [LeNet 5](https://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf) as the architecture for this task.
+
+The model outputs a vector that's equivalent in length to the number of classes: `output[i]` will get the probability of class `i`, where `i` is the numerical class assignment defined in [any of the training dataset descriptions](/scratch/lt2326-2926-h24/ThaiOCR/ThaiOCR-TrainigSet/English/20110202-List-Code-Character-OCR-Training-Database.txt). The output is softmaxed in order to get a probability distribution on the outputs. The most probable class can then by chosen by returning the highest-probability index.  
 
 ## Experiment results
 
 ## Bonus section
+### Formatting
+Last letter (b/g) indicates if b/w or grayscale. Dims are for grayscale only. Seems to work well enough for the bw too, though, from testing. 

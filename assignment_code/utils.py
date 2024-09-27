@@ -5,8 +5,8 @@ import numpy as np
 import pandas as pd
 import torch
 from PIL import Image
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from torch.utils.data import DataLoader, Dataset
-from torcheval.metrics import functional as torch_eval
 from torchvision.transforms import Resize
 from torchvision.transforms.functional import pil_to_tensor
 
@@ -63,25 +63,24 @@ class Evaluator:
 
     def run_on_input(self):
         # Keep a list-of-lists then flatten it later
-        # Necessary because
         overall_true_labels = []
         overall_predicted_labels = []
 
         for idx, data in enumerate(self.input.loader, 0):
             inputs, labels = data[0].to(self.device), data[1].to(self.device)
-            predicted = self.model(inputs)
+            predicted = torch.argmax(self.model(inputs), dim=1)
             overall_true_labels.append(labels)
             overall_predicted_labels.append(predicted)
 
-        self.actual = torch.cat(overall_true_labels)
-        self.predicted = torch.cat(overall_predicted_labels)
+        self.actual = torch.cat(overall_true_labels).cpu()
+        self.predicted = torch.cat(overall_predicted_labels).cpu()
         self.calculate_metrics()
 
     def calculate_metrics(self):
-        self.precision = torch_eval.multiclass_precision(self.predicted, self.actual)
-        self.recall = torch_eval.multiclass_recall(self.predicted, self.actual)
-        self.f1 = torch_eval.multiclass_f1_score(self.predicted, self.actual)
-        self.accuracy = torch_eval.multiclass_accuracy(self.predicted, self.actual)
+        self.precision = precision_score(self.predicted, self.actual, average="macro")
+        self.recall = recall_score(self.predicted, self.actual, average="macro")
+        self.f1 = f1_score(self.predicted, self.actual, average="macro")
+        self.accuracy = accuracy_score(self.predicted, self.actual)
 
     def __str__(self):
         output_str = f"""

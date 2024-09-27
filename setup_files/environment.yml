@@ -1,7 +1,8 @@
-name: assignment_1
+name: assignment_1_scratch
 channels:
   - pytorch
   - nvidia
+  - conda-forge
 dependencies:
   - python=3.12.3
   - pytorch
@@ -10,6 +11,8 @@ dependencies:
   - pytorch-cuda=12.1
   - pip
   - pandas
+  - scikit-learn
+  - opencv
   - pip:
     - torcheval
     - click
