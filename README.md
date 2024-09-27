@@ -4,7 +4,9 @@ This repository details my solution for assignment 1 of LT2926 at the University
 
 ## Instructions for use 
 
-Tl;dr if you want to run all the experiments required for this assignment, run `bash /home/gusandmich@GU.GU.SE/assignment_1/runs/do_all_runs.sh`. **This will overwrite all existing runs in that folder.**
+Tl;dr:
+- If you want to run all the experiments required for this assignment, run `bash /home/gusandmich@GU.GU.SE/assignment_1/runs/do_all_runs.sh`. **This will overwrite all existing runs in that folder.**
+- The results of all my experiment runs (logs, saved models, dataset contents, etc) are saved in `/home/gusandmich@GU.GU.SE/assignment_1_run_results/runs`. 
 
 Otherwise read below for instructions on how to use the individual scripts. 
 
