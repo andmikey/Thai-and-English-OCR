@@ -103,16 +103,18 @@ The dataset here is whole *pages* rather than individual characters. The task is
 
 I have implemented code to do the following: 
 - Load the images from the test set and segment them into the labelled 'zones'.
+- Split each zone into text lines. 
+    - I use OpenCV's morphologyEx to do this. It works reasonably well on pages that have *just* text, but works quite poorly on pages that have elements other than text (e.g. lines, diagrams).
 - Extract characters from each zone using OpenCV's contour-finding functionality. 
     - I disregard contours that are too small.  
     - I tested my method manually in a Jupyter notebook and it seems to capture letters reasonably well. 
     - I added some vertical padding around each letter to correctly capture diacritics.
-- Do a placeholder 'matching' between extracted characters and the provided labels (the end result is entirely incorrect, see below for more details). 
+- Do a placeholder 'matching' between extracted characters and the provided labels (the end result is not very good, see below for more details). 
 - Train a character-level model on all the provided training data.
 - Use the character-level model to predict the correct label for each segment of text, compare this to the 'matched' label, and generate a final performance score. 
 
 What I have not done: 
-- Correctly match extracted characters to the labels. I decided was too much work and wasn't aligned with what I want to learn from the course, so didn't want to dedicate too much time to it. If I had more time my approach would be:
+- Correctly match extracted characters to the labels. I decided getting this working was too much work and wasn't aligned with what I want to learn from the course, so didn't want to dedicate too much time to it. If I had more time my approach would be:
     - Segment out the image into 'rows'. My idea for this is to reduce the image to a set of intensity peaks along the y-axis (you can do this with e.g. OpenCV's reduce method). Choose the top of each peak as the midpoint of the row. 
     - Run OpenCV's contours method and assign each character to the row it belongs to. I'd do this by taking the midpoint of each character's bounding box and assigning it to the closest row along the y-axis.
     - Sort the characters within each row left-to-right (since both Thai and English are read left-to-right) according to their x-coordinates. 
