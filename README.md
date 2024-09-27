@@ -99,6 +99,12 @@ I ran all experiments with a batch size of 10 for 20 epochs. I chose these param
 
 ### Train on Thai normal text, 200dpi, test on Thai normal text, 200dpi
 
+| Section | Dataset size | 
+| --- | --- | 
+| Train | 16220 | 
+| Validate | 5356 |
+| Test | 5654 | 
+
 Metric | Train | Validation | Test |  
 ---|---|---|---|
 Precision | 37.926% | 37.579% | 38.342% | 
@@ -112,6 +118,12 @@ Training loss:
 
 ### Train on Thai normal text, 400dpi, test on Thai normal text, 200dpi
 
+| Section | Dataset size | 
+| --- | --- | 
+| Train | 21606 | 
+| Validate | 5478 |
+| Test | 27230 | 
+
 Metric | Train | Validation | Test |  
 ---|---|---|---|
 Precision | 32.696% | 32.068% | 29.360%
@@ -124,6 +136,12 @@ Training loss:
 ![](./runs/thai_normal_400_thai_normal_200/outputs/training_loss.png)
 
 ### Train on Thai normal text, 400dpi, test on Thai bold text, 400dpi
+
+| Section | Dataset size | 
+| --- | --- | 
+| Train | 21606 | 
+| Validate | 5478 |
+| Test | 27145 | 
 
 Metric | Train | Validation | Test |  
 ---|---|---|---|
@@ -139,6 +157,12 @@ Training loss:
 
 ### Train on Thai bold text, test on Thai normal text
 
+| Section | Dataset size | 
+| --- | --- | 
+| Train | 21752 | 
+| Validate | 5513 |
+| Test | 27230 | 
+
 Metric | Train | Validation | Test |  
 ---|---|---|---|
 Precision | 9.490% | 9.468% | 7.267%
@@ -153,6 +177,14 @@ Training loss:
 
 
 ### Train on all Thai styles, test on all Thai styles
+
+| Section | Dataset size | 
+| --- | --- | 
+| Train | 64922 | 
+| Validate | 22624 |
+| Test | 21442 | 
+
+TODO update mtrics 
 
 Metric | Train | Validation | Test |  
 ---|---|---|---|
@@ -178,7 +210,13 @@ Training loss:
 
 ![](./runs/thai_english_normal_jointly/outputs/training_loss.png)
 
-### Train on all Thai and English styles jointly, test on all Thai and English styles jointly
+### Train on all Thai and English styles jointly (200dpi), test on all Thai and English styles jointly
+
+| Section | Dataset size | 
+| --- | --- | 
+| Train | 64922 | 
+| Validate | 21442 |
+| Test | 22624 | 
 
 Metric | Train | Validation | Test |  
 ---|---|---|---|
