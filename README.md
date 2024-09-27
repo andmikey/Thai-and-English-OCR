@@ -188,10 +188,10 @@ TODO update mtrics
 
 Metric | Train | Validation | Test |  
 ---|---|---|---|
-Precision | 2.564% | 2.553% | 2.560%
-Recall | 0.517% | 0.555% | 0.581%
-F1 | 0.454% | 0.451% | 0.458%
-Accuracy | 2.679% | 2.665% | 2.675%
+Precision | 2.674%  | 2.581% | 2.698% 
+Recall | 0.200%  | 0.184% | 0.203% 
+F1 | 0.355%  | 0.329% | 0.359% 
+Accuracy | 2.786%  | 2.687% | 2.812% 
 
 Training loss:
 
