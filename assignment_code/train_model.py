@@ -52,7 +52,7 @@ def main(train_data, validation_data, batches, epochs, save_dir, logging_path):
 
     # Use GPU if available
     if not torch.cuda.is_available():
-        print("CUDA is not available, will train on CPU")
+        logger.info("CUDA is not available, will train on CPU")
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     logger.info(f"Using device: {device}")
@@ -70,7 +70,9 @@ def main(train_data, validation_data, batches, epochs, save_dir, logging_path):
             loss.backward()
             optimizer.step()
         # Track mean loss for each epoch
-        loss_for_training.append(sum(loss_at_step) / len(loss_at_step))
+        epoch_loss = sum(loss_at_step) / len(loss_at_step)
+        logger.info(f"Mean loss for epoch {epoch} is {epoch_loss}")
+        loss_for_training.append(epoch_loss)
 
     # Plot graph of training loss
     fig, ax = plt.subplots()
