@@ -34,7 +34,7 @@ class ImageDataset(Dataset):
 
     def __getitem__(self, idx: int):
         image_path = self.data.iloc[idx]["path"]
-        # .long() converts from binary array to float array
+        # .float() converts from binary array to float array
         image = pil_to_tensor(Image.open(image_path)).float()
         # Resize all images to 64x64
         resized_image = Resize(size=(64, 64))(image)

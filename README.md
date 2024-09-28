@@ -3,7 +3,8 @@
 This repository details my solution for assignment 1 of LT2926 at the University of Gothenburg (Machine learning for statistical NLP: advanced), building a system for Thai and English OCR. 
 
 My writeups for each question are available in the below files:
-- [Main assignment](./main_assignment.md)
+- [Main assignment experiment results](./main_assignment.md)
+- [Short qualitative analysis of experiment results](./notebooks/qualitative_error_analysis.ipynb)
 
 ## Instructions for use 
 
