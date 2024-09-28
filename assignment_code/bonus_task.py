@@ -6,7 +6,7 @@ import click
 import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
 
 
 def get_characters_from_image(img, plot_img=False):
@@ -19,14 +19,20 @@ def get_characters_from_image(img, plot_img=False):
     rowcontours, _ = cv.findContours(morph, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     rows = []
 
+    # For drawing
+    draw_rect = ImageDraw.Draw(img.convert("RGBA"), "RGBA")
+    draw_char = ImageDraw.Draw(img.convert("RGBA"), "RGBA")
+
     for rowcntr in rowcontours:
         xr, yr, wr, hr = cv.boundingRect(rowcntr)
         # Choose rows that have:
         # Ratio of weight/height >= 4
         # Height larger than a single character... but not too large
         if (wr / hr) >= 4 and hr > 15 and hr < 200:
-            # display(img.crop((xr, yr, xr+wr, yr+hr)))
-            rows.append((xr, yr - 14, xr + wr, yr + hr + 10))
+            # Add a bit of flex space around the border
+            borders = (xr, yr - 14, xr + wr + 10, yr + hr)
+            draw_rect.rectangle(borders, outline="Red", fill=None, width=2)
+            rows.append(borders)
 
     # Sort the rows by their y-coordinate
     rows.sort(key=lambda x: x[1])
@@ -35,20 +41,30 @@ def get_characters_from_image(img, plot_img=False):
     for row in rows:
         row_img = img.crop(row)
         contours, _ = cv.findContours(
-            np.array(row_img), cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE
+            np.array(row_img), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE
         )
         bounding_boxes = []
 
         for cnt in contours:
             x, y, w, h = cv.boundingRect(cnt)
-            if w > 5 and h > 10:
-                bounding_boxes.append((x, y - 50, x + w, y + h + 20))
+            if w > 2 and h > 3 and w < 100:
+                y_add_below = 5
+                y_add_above = 10
+                borders = (x, y - y_add_above, x + w, y + h + y_add_below)
+                crop_borders = (
+                    x + row[0],
+                    y + row[1] - y_add_above,
+                    x + row[0] + w,
+                    y + row[1] + h + y_add_below,
+                )
+                draw_char.rectangle(crop_borders, outline="Blue", fill=None, width=2)
+                bounding_boxes.append(borders)
         # Sort the characters by their x-coordinate
         bounding_boxes.sort(key=lambda x: x[0])
         characters.extend([row_img.crop(b) for b in bounding_boxes])
 
     if plot_img:
-        fig, axs = plt.subplots(2, 2)
+        fig, axs = plt.subplots(2, 2, figsize=(20, 20))
         axs[0][0].set_title("Original image")
         axs[0][1].set_title("With rectangles to separate lines")
         axs[1][0].set_title("Identified lines")
@@ -56,6 +72,12 @@ def get_characters_from_image(img, plot_img=False):
 
         axs[0][0].imshow(img)
         axs[0][1].imshow(morph)
+        axs[1][0].imshow(draw_rect._image)
+        axs[1][1].imshow(draw_char._image)
+
+        plt.tight_layout()
+
+        fig.show()
 
     return characters
 
