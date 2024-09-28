@@ -1,9 +1,62 @@
 # Bonus question
+
+Tl;dr: I have implemented a partially-working pipeline to extract text from the whole-page scans and classify it on a character-level with a trained model. The methodology to extract individual characters from pages in reading (top-to-bottom, left-to-right) order does not work very well and I decided it would be too much time to get working reliably.
+
+Things left to do:
+- Finish up code for reading characters etc 
+- Decide how to assess performance in the absence of good matching method
+- Write up:
+    - Methodology
+    - Example notebook showing performance of character extraction
+    - Thoughts for further approaches
+
 ## Understanding the task
 
 The dataset here is whole *pages* rather than individual characters. The task is now twofold:
 - Extract individual words or characters from the pages
 - Run OCR to convert those words/characters into readable form
+
+## Overview of approach
+
+My approach is as follows:
+- Segment
+
+## Detail of approach
+
+### Extracting characters from each page
+
+### Training a character-level model across all the data
+
+I trained a model across *all* the 'trainig [sic]' data, using 90% of it for training and 10% for validation. Based on what I saw in my original experiments:
+- 20 epochs was too few for the model to perform reasonably, so I trained this one for 100 epochs. 
+- When training on a larger dataset that included many classes/styles/resolutions, the training loss jumped around a lot, suggesting the batch size was too small: so for this run I increased the batch size from 20 to 256. 
+
+Training this model took almost exactly 8 hours using the gpu on `mltgpu`. The training log is available at `/home/gusandmich@GU.GU.SE/assignment_1_run_results/runs/bonus_task/results.log`.
+
+The training dataset is very large - almost half a million items. Note I have not used a test dataset, only a validation set, so that I could maximize the available amount of training data. Testing would be done by evaluating performance on the downstream task i.e. how well it does at recognizing characters from the unseen page scans. 
+
+| Section | Dataset size | 
+| --- | --- | 
+| Train | 439968 | 
+| Validate | 49189 |
+
+The performance is much better than we observed in the [original experiment](./main_assignment.md#train-on-all-thai-and-english-styles-jointly-200dpi-test-on-all-thai-and-english-styles-jointly), with 88%+ across all evaluation metrics. The train performance is a little better than the validation performance, so I suspect there's been some overfitting, but validation performance is still very good for a relatively simple architecture:
+
+Metric | Train | Validation 
+---|---|---
+Precision | 88.599% | 88.376%
+Recall | 88.775% | 88.499%
+F1 | 88.576% | 88.328%
+Accuracy | 88.934% | 88.717%
+
+The trained model loss is also sensible. The loss no longer jumps around, so increasing the batch size was the right solution (no need to try a different optimizer). It looks like the loss has also settled down close to a minimum, so increasing to 100 epochs of training was also a good idea. In hindsight I probably should have plotted a valuation loss as well to stop overfitting (that is, stop training further once you see validation loss increasing and training loss decreasing):
+
+![](./runs/bonus_task/outputs/training_loss.png)
+
+(Sorry about the x-axis labelling! I should have labeled every 10 epochs. It goes from 0 to 99.)
+
+## Roadmap for future work
+
 
 ### Summary of what I did and didn't do 
 
