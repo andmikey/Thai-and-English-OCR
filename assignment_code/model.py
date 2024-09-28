@@ -5,7 +5,6 @@ class BasicNetwork(nn.Module):
     def __init__(self, num_classes, img_dims):
         # Some borrowing from this, adjusted to the right sizes for a 64x64 image:
         # https://medium.com/@deepeshdeepakdd2/lenet-5-implementation-on-mnist-in-pytorch-c6f2ee306e37
-        # TODO don't hard-code image size
         super().__init__()
         conv1 = nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5, padding=2)
         avgp = nn.AvgPool2d(kernel_size=4, stride=2)
@@ -15,6 +14,9 @@ class BasicNetwork(nn.Module):
         tanh = nn.Tanh()
         fc2 = nn.Linear(in_features=120, out_features=84)
         fc3 = nn.Linear(in_features=84, out_features=num_classes)
+        # PyTorch CrossEntropyLoss() handles the softmax for us, so don't need to
+        # do it here
+        # softmax = nn.Softmax()
 
         self.feature = nn.Sequential(conv1, tanh, avgp, conv2, tanh, avgp)
         self.classifier = nn.Sequential(fl, fc, tanh, fc2, tanh, fc3)

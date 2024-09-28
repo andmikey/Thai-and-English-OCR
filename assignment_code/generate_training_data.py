@@ -1,3 +1,4 @@
+import logging
 import random
 from collections import defaultdict
 from dataclasses import dataclass
@@ -49,6 +50,9 @@ def split_dataset(
     validation_proportion: float,
 ) -> Tuple[List, List, List]:
     # Shuffle the list before doing anything to it
+    # NOTE I realized after running all the experiments that this still means the entire dataset is not shuffled,
+    # only the specific subset we're looking at here (lang, char, dpi, style). I didn't want to rerun all my analysis
+    # so I've left as-is :( And fixed in the DataLoader by adding a shuffle=True argument.
     random.shuffle(items)
 
     num_train = int(train_proportion * len(items))
@@ -68,7 +72,7 @@ def split_dataset(
     multiple=True,
     default=["English", "Thai"],
     type=click.Choice(["English", "Thai", "Special", "Numeric"]),
-)  # Empty means use all
+)
 @click.option(
     "-d",
     "--dpi",
@@ -95,6 +99,7 @@ def split_dataset(
     default=Path("/scratch/lt2326-2926-h24/ThaiOCR/ThaiOCR-TrainigSet"),
 )
 @click.option("-o", "--output_path", type=click.Path(exists=True, path_type=Path))
+@click.option("-l", "--logging_path", type=click.Path(path_type=Path))
 @click.option("-r", "--random_seed", type=int, default=42, required=False)
 def main(
     language,
@@ -105,8 +110,19 @@ def main(
     validation_proportion,
     input_path,
     output_path,
+    logging_path,
     random_seed,
 ):
+    # Set up logging
+    logging.basicConfig(
+        filename=logging_path,
+        filemode="a",
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+    )
+    logger = logging.getLogger(__name__)
+    logger.info("Starting training data generation")
+
     # Validate proportion inputs
     if train_proportion + test_proportion + validation_proportion != 1:
         raise AssertionError(
@@ -151,14 +167,22 @@ def main(
                     validation_set.add_points(key, val)
 
     # Write out the train/test/validation sets to the given output path
-    print(
-        f"Generated data points:\n Train: {training_set.count_points()}\n",
-        f"Test:  {testing_set.count_points()}\n",
-        f"Val:   {validation_set.count_points()}\n",
-    )
-    training_set.write_to_file(output_path, "training_set.txt")
-    testing_set.write_to_file(output_path, "testing_set.txt")
-    validation_set.write_to_file(output_path, "validation_set.txt")
+    logger.info("Generated data points:")
+    logger.info(f"Train: {training_set.count_points()}")
+    logger.info(f"Test:  {testing_set.count_points()}")
+    logger.info(f"Val:   {validation_set.count_points()}")
+
+    # If specified proportion is zero, we don't write to file
+    # This allows us to generate train and test from different distributions
+    if train_proportion != 0:
+        logger.info(f"Writing out training set to {output_path/'training_set.txt'}")
+        training_set.write_to_file(output_path, "training_set.txt")
+    if test_proportion != 0:
+        logger.info(f"Writing out testing set to {output_path/'testing_set.txt'}")
+        testing_set.write_to_file(output_path, "testing_set.txt")
+    if validation_proportion != 0:
+        logger.info(f"Writing out validation set to {output_path/'validation_set.txt'}")
+        validation_set.write_to_file(output_path, "validation_set.txt")
 
 
 if __name__ == "__main__":
