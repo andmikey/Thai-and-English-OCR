@@ -201,7 +201,7 @@ def predict_text_for_segment(segment_name, segment, label_dir, model):
         )
     except FileNotFoundError:
         # No label for this text segment, so don't go further
-        raise Exception
+        txt_contents = ""
 
     # Run model on all the characters in the segment to get the overall label text for the segment
     overall_pred = []
@@ -331,7 +331,7 @@ def main(
             except:
                 # Skip if file doesn't exist for segment or no characters found in segment
                 continue
-            if actual is not None:
+            if pred is not None or actual is not None:
                 pred_to_str = "".join([character_mappings[x] for x in pred])
 
                 with open(
