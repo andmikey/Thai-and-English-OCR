@@ -5,6 +5,7 @@ This repository details my solution for assignment 1 of LT2926 at the University
 My writeups for each question are available in the below files:
 - [Main assignment experiment results](./main_assignment.md)
 - [Short qualitative analysis of experiment results](./notebooks/qualitative_error_analysis.ipynb)
+- [Bonus question](./bonus_question.md)
 
 ## Instructions for use 
 
