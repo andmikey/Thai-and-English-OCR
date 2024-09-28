@@ -70,7 +70,7 @@ Use the [model evaluation script](./assignment_code/evaluate_model.py) to evalua
 
 ```sh
 python3 assignment_code/evaluate_model.py 
-    --test-data some_training_data_foldertesting_set.txt 
+    --test-data some_training_data_folder/testing_set.txt 
     --model_path some_results_folder/model.pth 
     --logging_path results.log
 ```
