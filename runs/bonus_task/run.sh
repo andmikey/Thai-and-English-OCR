@@ -1,10 +1,12 @@
 #!/bin/bash
 set -eo pipefail
 
-NUM_EPOCHS=20
-NUM_BATCHES=10
+NUM_BATCHES=256
+NUM_EPOCHS=100
 
-experiment_path=$(pwd)
+experiment_path=$(pwd)/$(dirname "$0")
+echo $experiment_path
+
 # Set up directories
 mkdir -p $experiment_path/data/ $experiment_path/outputs/
 
@@ -26,5 +28,4 @@ python3 ../assignment_code/train_model.py \
     --logging_path $experiment_path/results.log
 
 # Extract + predict letters
-
-python3 ../../assignment_code/bonus_task.py -c "200dpi_BW" -t Book
+# python3 ../../assignment_code/bonus_task.py -c "200dpi_BW" -t Book
