@@ -28,4 +28,5 @@ mkdir -p $experiment_path/data/ $experiment_path/outputs/
 #     --logging_path $experiment_path/results.log
 
 # Extract + predict letters
-python3 ../assignment_code/bonus_task.py -d '200' -t Book --model_path $experiment_path/outputs/model.pth --write_images
+# python3 ../assignment_code/bonus_task.py -d '200' -t Book --model_path $experiment_path/outputs/model.pth --write_images --output_path /scratch/gusandmich/assignment_1_bonus_q/Book_200/output --img_save_path  /scratch/gusandmich/assignment_1_bonus_q/Book_200/images
+python3 ../assignment_code/bonus_task.py -d '200' -t Journal --model_path $experiment_path/outputs/model.pth --write_images --output_path /scratch/gusandmich/assignment_1_bonus_q/Journal_200/output --img_save_path /scratch/gusandmich/assignment_1_bonus_q/Journal_200/images

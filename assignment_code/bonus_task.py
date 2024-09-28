@@ -135,12 +135,14 @@ class Segment:
         )
         self.img = img
 
-    def get_characters_in_segment(self, img_save_dir, plot_images=False):
-        char_images = get_characters_from_image(self.img, plot_images, img_save_dir)
-        if len(char_images) == 0:
+    def get_characters_in_segment(self, img_save_dir=None, plot_images=False):
+        self.char_images = get_characters_from_image(
+            self.img, plot_images, img_save_dir
+        )
+        if len(self.char_images) == 0:
             raise Exception
         # Create dataloader from characters
-        dataset = CharacterDataset(char_images)
+        dataset = CharacterDataset(self.char_images)
         self.loader = DataLoader(dataset, batch_size=BATCHES, shuffle=False)
 
 
@@ -177,8 +179,16 @@ def read_segment_list(
             try:
                 segment.get_image_of_segment()
             except FileNotFoundError:
-                # This file doesn't exist, so skip it
+                # This file doesn't exist, skip it
                 continue
+            except ValueError:
+                # Segment dimensions are incorrectly specified
+                print(
+                    f"{fname_for_img} zone {segment_num} has incorrectly specified dimension"
+                )
+                print(x_start, y_start, x_end, y_end)
+                continue
+
             try:
                 segment.get_characters_in_segment(
                     save_dir / (segment_name + ".png"), write_img
