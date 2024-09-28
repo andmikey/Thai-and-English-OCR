@@ -114,7 +114,8 @@ class CharacterDataset(Dataset):
         image = pil_to_tensor(self.char_images[idx]).float()
         # Resize to 64x64
         resized_image = Resize(size=(64, 64))(image)
-        # Don't return a label because we don't have any!
+        # Don't return a label because we don't have any at this point in the pipeline
+        # (And, as I later realized, the labels are wrong anyway!)
         return resized_image, 0
 
 
@@ -332,10 +333,20 @@ def main(
                 continue
             if actual is not None:
                 pred_to_str = "".join([character_mappings[x] for x in pred])
-                segment_output_file = output_path / (segment_name + ".txt")
-                with open(segment_output_file, "w", encoding="windows-1252") as f:
-                    f.write(f"PREDICTED:\n{pred_to_str}\n")
-                    f.write(f"ACTUAL:\n{actual}\n")
+
+                with open(
+                    output_path / (segment_name + "_predicted.txt"),
+                    "w",
+                    encoding="windows-1252",
+                ) as f:
+                    f.write(pred_to_str)
+
+                with open(
+                    output_path / (segment_name + "_actual.txt"),
+                    "w",
+                    encoding="windows-1252",
+                ) as f:
+                    f.write(actual)
 
 
 if __name__ == "__main__":
