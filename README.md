@@ -5,12 +5,13 @@ This repository details my solution for assignment 1 of LT2926 at the University
 My writeups for each question are available in the below files:
 - [Main assignment experiment results](./main_assignment.md)
 - [Short qualitative analysis of experiment results](./notebooks/qualitative_error_analysis.ipynb)
-- [Bonus question](./bonus_question.md)
+- [Bonus question](./bonus_question.md) and an [example of the OCR pipeline](./notebooks/results_of_bonus_task.ipynb). 
 
 ## Instructions for use 
 
 Tl;dr:
-- If you want to run all the experiments required for this assignment, run `bash /home/gusandmich@GU.GU.SE/assignment_1/runs/do_all_runs.sh`. **This will overwrite all existing runs in that folder.**
+- If you want to run all the experiments required for the non-bonus part of this assignment, run `bash runs/do_all_runs.sh`. 
+- If you want to run the script for the bonus part of the assignment, run `bash runs/run_bonus_task.sh`. 
 - The results of all my experiment runs (logs, saved models, dataset contents, etc) are saved in `/home/gusandmich@GU.GU.SE/assignment_1_run_results/runs`. 
 
 Otherwise read below for instructions on how to use the individual scripts. 
@@ -76,3 +77,18 @@ python3 assignment_code/evaluate_model.py
 ```
 
 This will log the results of model evaluation (precision, recall, F1, accuracy) to `results.log`. 
+
+### Run the bonus task
+
+Use the scripts above to generate a training dataset and train a model on that training dataset.
+
+Then use the bonus task run script to run an end-to-end OCR pipeline on all the images specified by the DPI and type (Book/Journal): 
+
+```sh
+python3 assignment_code/bonus_task.py
+    -d '200' -t Journal # 200 DPI journal images
+    --model_path some_results_folder/model.pth # Trained model
+    --output_path some_results_folder/output # For each segment, writes out a segment_name_PREDICTED.txt and segment_name_ACTUAL.txt file here
+    --write_images # Write out intermediate images - the original image, row thresholding, row segmentation, and character segmentation
+    --img_save_path some_results_folder/images # Save intermediate images here
+```
