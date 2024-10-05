@@ -185,6 +185,7 @@ I used the pipeline to segment and predict characters for a sample page that was
 Because the performance I observed by hand was poor (and I knew there were issues with the labelling), I decided not to write a separate evaluation pipeline. 
 
 I did, however, spend some time thinking about some possible ways you could evaluate the pipeline's performance:
+- Calculate Character Error Rate / Word Error Rate: this seems to be the most common evaluation metric in OCR tasks.
 - Use the Jaccard similarity to compute the overlap in characters between the predicted and the actual text: however, this loses character order, so isn't very effective.
 - Compute the Levenshtein distance distance between the predicted text and the actual text - this means that additional characters would only be penalized as a deletion, so there's less of an issue with over-predicting characters. 
 - Compute strictly whether or not the predicted text matches to the actual text. This would make sense if high accuracy is required in the context of the OCR application.  
