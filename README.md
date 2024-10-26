@@ -5,7 +5,9 @@ This repository details my solution for assignment 1 of LT2926 at the University
 My writeups for each question are available in the below files:
 - [Main assignment experiment results](./main_assignment.md)
 - [Short qualitative analysis of experiment results](./notebooks/qualitative_error_analysis.ipynb)
-- [Bonus question](./bonus_question.md) and an [example of the OCR pipeline](./notebooks/results_of_bonus_task.ipynb). 
+- [Bonus question](./bonus_question.md) and an [example of the OCR pipeline](./notebooks/results_of_bonus_task.ipynb).
+
+I received a mark of 55/30 for this assignment (30/30 in the core questions and 25/25 in the bonus question) and found out that OCR is pretty hard, actually. 
 
 ## Instructions for use 
 
